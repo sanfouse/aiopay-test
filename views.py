@@ -1,16 +1,13 @@
-import random
-
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
+
 from models.table import Advert, User
-from utils import loader
 
 
 @aiohttp_jinja2.template('home.html')
 async def home(request):
     session = await get_session(request)
-
     try:
         if session['auth']:
             if str(request.url.relative()).startswith('/admin/?search='):
@@ -18,19 +15,7 @@ async def home(request):
                 data = await Advert.query.where(Advert.title.startswith(str(search))).gino.all()
                 return {'data': data}
             data = await Advert.query.gino.all()
-            return {'data': data}
-        else:
-            raise web.HTTPFound('/admin/login')
-    except KeyError:
-        raise web.HTTPFound('/admin/login')
-
-
-@aiohttp_jinja2.template('item.html')
-async def add_item(request):
-    session = await get_session(request)
-    try:
-        if session['auth']:
-            return {'item': None}
+            return {'data': data, 'id': str(session['id'])}
         else:
             raise web.HTTPFound('/admin/login')
     except KeyError:
@@ -39,23 +24,18 @@ async def add_item(request):
 
 @aiohttp_jinja2.template('login.html')
 async def login(request):
-    pass
+    session = await get_session(request)
+    session['auth'] = False
 
 
-@aiohttp_jinja2.template('item.html')
-async def add_item_check(request):
+@aiohttp_jinja2.template('login.html')
+async def log_out(request):
     session = await get_session(request)
     try:
         if session['auth']:
-            data = await request.post()
-            await Advert.create(title=data['title'],
-                description=data['description'],
-                price=data['price'], 
-                partner_link=data['link'],
-                category_name=data['category'],
-                category_code=str(data['category']).lower().replace(' ', '_'))
-
-            raise web.HTTPFound('/admin/')
+            session['auth'] = False
+            session['id'] = None
+            raise web.HTTPFound('/admin/login')
         else:
             raise web.HTTPFound('/admin/login')
     except KeyError:
@@ -66,7 +46,10 @@ async def add_item_check(request):
 async def login_check(request):
     session = await get_session(request)
     data = await request.post()
-    user_data = await User.query.where(User.otp==int(data['otp'])).gino.scalar()
+    try:
+        user_data = await User.query.where(User.otp==int(data['otp'])).gino.scalar()
+    except ValueError:
+        raise web.HTTPFound('/admin/login')
 
     if user_data is None:
         session['auth'] = False
@@ -77,6 +60,7 @@ async def login_check(request):
         raise web.HTTPFound('/admin/login')
     
     session['auth'] = True
+    session['id'] = data['id']
     raise web.HTTPFound('/admin/')
 
 
@@ -87,7 +71,7 @@ async def advert(request):
         if session['auth']:
             data = str(request.url.relative()).split('/')[2]
             founding_advert = await Advert.query.where(Advert.id == int(data)).gino.first()
-            return {'item': founding_advert}    
+            return {'item': founding_advert, 'message': 'Редактирование товара', 'id': str(session['id'])}    
         else:
             raise web.HTTPFound('/admin/login')
     except KeyError:
@@ -106,6 +90,38 @@ async def edit_item(request):
                 price=data['price'], partner_link=data['link'],
                 category_name=data['category'],
                 category_code=str(data['category']).lower().replace(' ', '_')).apply()
+            raise web.HTTPFound('/admin/')
+        else:
+            raise web.HTTPFound('/admin/login')
+    except KeyError:
+        raise web.HTTPFound('/admin/login')
+
+
+@aiohttp_jinja2.template('item.html')
+async def add_item(request):
+    session = await get_session(request)
+    try:
+        if session['auth']:
+            return {'item': None, 'message': 'Добавление товара', 'id': str(session['id'])}
+        else:
+            raise web.HTTPFound('/admin/login')
+    except KeyError:
+        raise web.HTTPFound('/admin/login')
+
+
+@aiohttp_jinja2.template('item.html')
+async def add_item_check(request):
+    session = await get_session(request)
+    try:
+        if session['auth']:
+            data = await request.post()
+            await Advert.create(title=data['title'],
+                description=data['description'],
+                price=data['price'], 
+                partner_link=data['link'],
+                category_name=data['category'],
+                category_code=str(data['category']).lower().replace(' ', '_'))
+
             raise web.HTTPFound('/admin/')
         else:
             raise web.HTTPFound('/admin/login')

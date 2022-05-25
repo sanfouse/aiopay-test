@@ -10,3 +10,4 @@ def setup_routes(app):
     app.router.add_get('/admin/{data}', advert)
     app.router.add_post('/admin/{data}', edit_item)
     app.router.add_post('/admin/', login_check)
+    app.router.add_post('/admin/login', log_out)

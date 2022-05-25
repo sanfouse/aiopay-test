@@ -18,10 +18,9 @@
             <p class="text-muted">AdminPanel | Monitoring system </p>
           </div>
           <div class="col-sm-4 offset-md-1 py-4">
-            <!-- <h4 class="text-white">Навигация</h4> -->
+            <h4 class="text-white">{{ id }}</h4>
             <ul class="list-unstyled">
-              <!-- <li><a href="#monitor" class="text-white">Список загрузок</a></li>
-              <li><a href="#history" class="text-white">История загрузок</a></li> -->
+              <form method="post" action="/admin/login"><li><button class="btn btn-danger" type="submit">Выход</button></li></form>
             </ul>
           </div>
         </div>
@@ -42,7 +41,7 @@
   <section class="text-center container">
     <div class="row py-lg-5">
       <div class="col-lg-6 col-md-8 mx-auto">
-        <h1 class="fw-light">Редактирование товара</h1>
+        <h1 class="fw-light">{{ message }}</h1>
       </div>
     </div>
   </section>
