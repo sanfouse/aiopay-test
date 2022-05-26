@@ -43,7 +43,7 @@ async def log_out(request):
 
 
 @aiohttp_jinja2.template('home.html')
-async def login_check(request):
+async def log_in(request):
     session = await get_session(request)
     data = await request.post()
     try:
@@ -122,6 +122,20 @@ async def add_item_check(request):
                 category_name=data['category'],
                 category_code=str(data['category']).lower().replace(' ', '_'))
 
+            raise web.HTTPFound('/admin/')
+        else:
+            raise web.HTTPFound('/admin/login')
+    except KeyError:
+        raise web.HTTPFound('/admin/login')
+
+
+@aiohttp_jinja2.template('home.html')
+async def delete_item(request):
+    session = await get_session(request)
+    try:
+        if session['auth']:
+            data = str(request.url.relative()).split('/')[3]
+            await Advert.delete.where(Advert.id == int(data)).gino.first()
             raise web.HTTPFound('/admin/')
         else:
             raise web.HTTPFound('/admin/login')
