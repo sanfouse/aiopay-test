@@ -75,19 +75,27 @@
     <div class="d-grid gap-2 col-6 mx-auto">
       <a class="btn btn-primary" type="button" href="/admin/add_item">Добавить товар</a>
     </div>
-
+<br>
   <div class="container">
-        {% for item in data %}
-        <br>
-        <div class="card">
-          <h5 class="card-header">{{ item.title }}</h5>
-          <div class="card-body">
-            <h5 class="card-title">{{ item.category }}</h5>
-            <p class="card-text">{{ item.description }}</p>
-            <a class="btn btn-primary" href="/admin/{{item.id}}">Редактировать</a>
+        <div class="container">
+          {% for item in data %}
+          <div class="card mb-3" style="max-width: 720px;">
+            <div class="row g-0">
+              <div class="col-md-4">
+                <img src="{{ item.image_link }}" class="img-fluid rounded-start">
+              </div>
+              <div class="col-md-8">
+                <div class="card-body">
+                  <h5 class="card-title">{{ item.title }}</h5>
+                  <p class="card-text">{{ item.description }}</p>
+                  <p class="card-text"><small class="text-muted">{{ item.price }}₽</small></p>
+                  <a class="btn btn-primary" href="/admin/{{ item.id }}">Редактировать</a>
+                </div>
+              </div>
+            </div>
           </div>
-        </div>
-      {% endfor %}
+          {% endfor %}
+        <br>
     </div>
   </div>
 

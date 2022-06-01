@@ -1,7 +1,7 @@
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
-
+from utils.utils import get_image
 from models.table import Advert, User
 
 
@@ -89,7 +89,8 @@ async def edit_item(request):
                 description=data['description'],
                 price=data['price'], partner_link=data['link'],
                 category_name=data['category'],
-                category_code=str(data['category']).lower().replace(' ', '_')).apply()
+                category_code=str(data['category']).lower().replace(' ', '_'),
+                image_link=str(get_image(str(data['link'])))).apply()
             raise web.HTTPFound('/admin/')
         else:
             raise web.HTTPFound('/admin/login')
@@ -120,7 +121,8 @@ async def add_item_check(request):
                 price=data['price'], 
                 partner_link=data['link'],
                 category_name=data['category'],
-                category_code=str(data['category']).lower().replace(' ', '_'))
+                category_code=str(data['category']).lower().replace(' ', '_'),
+                image_link=str(get_image(str(data['link']))))
 
             raise web.HTTPFound('/admin/')
         else:

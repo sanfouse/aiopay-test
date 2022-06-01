@@ -15,6 +15,7 @@ class Advert(db.Model):
   price = db.Column(db.Numeric(12,2))
 
   partner_link = db.Column(db.Unicode())
+  image_link = db.Column(db.String())
 
 
 class User(db.Model):
