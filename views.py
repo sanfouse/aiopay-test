@@ -13,9 +13,9 @@ async def home(request):
             if str(request.url.relative()).startswith('/admin/?search='):
                 search: str =  request.rel_url.query['search']
                 data = await Advert.query.where(Advert.title.startswith(str(search))).gino.all()
-                return {'data': data}
+                return {'data': data[::-1]}
             data = await Advert.query.gino.all()
-            return {'data': data, 'id': str(session['id'])}
+            return {'data': data[::-1], 'id': str(session['id'])}
         else:
             raise web.HTTPFound('/admin/login')
     except KeyError:
@@ -55,7 +55,7 @@ async def log_in(request):
         session['auth'] = False
         raise web.HTTPFound('/admin/login')
 
-    if int(data['id']) not in [895872844, 875044476]:
+    if int(data['id']) not in [895872844]:
         session['auth'] = False
         raise web.HTTPFound('/admin/login')
     
