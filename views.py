@@ -6,8 +6,15 @@ from models.table import Advert, User
 from utils.utils import AliItem
 
 
-@aiohttp_jinja2.template('home.html')
+@aiohttp_jinja2.template('index.html')
 async def home(request):
+    data = await Advert.query.gino.all()
+    category_data = await Advert.select('category_name').gino.all()
+    return {'data': data[::-1], 'category_data': [x for t in category_data for x in t]}
+
+
+@aiohttp_jinja2.template('home.html')
+async def home_admin(request):
     session = await get_session(request)
     try:
         if session['auth']:
