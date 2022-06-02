@@ -11,6 +11,7 @@ class Advert(db.Model):
 
   title = db.Column(db.Unicode())
   description = db.Column(db.Unicode())
+  description_code = db.Column(db.Unicode())
   price = db.Column(db.Numeric(12,2))
 
   partner_link = db.Column(db.Unicode())

@@ -10,7 +10,20 @@ from utils.utils import AliItem
 async def home(request):
     data = await Advert.query.gino.all()
     category_data = await Advert.select('category_name').gino.all()
-    return {'data': data[::-1], 'category_data': [x for t in category_data for x in t]}
+    try:
+        session = await get_session(request)
+        return {
+            'data': data[::-1],
+            'category_data': [x for t in category_data for x in t],
+            'auth': session['auth']
+         }
+    except:
+        return {'data': data[::-1], 'category_data': [x for t in category_data for x in t]}
+
+
+@aiohttp_jinja2.template('index.html')
+async def item(request):
+    pass
 
 
 @aiohttp_jinja2.template('home.html')
@@ -95,6 +108,7 @@ async def edit_item(request):
             item = await Advert.query.where(Advert.id == int(data['id'])).gino.first()
             await item.update(title=data['title'],
                 description=data['description'],
+                description_code=data['description'][:31] + '...',
                 price=data['price'], partner_link=data['link'],
                 category_name=data['category'],
                 category_code=str(data['category']).lower().replace(' ', '_'),
@@ -126,6 +140,7 @@ async def add_item_check(request):
             data = await request.post()
             await Advert.create(title=data['title'],
                 description=data['description'],
+                description_code=data['description'][:31] + '...',
                 price=AliItem(data['link']).get_price(), 
                 partner_link=data['link'],
                 category_name=data['category'],
