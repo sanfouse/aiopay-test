@@ -4,10 +4,11 @@ import aiohttp_jinja2
 import jinja2
 from aiohttp import web
 from aiohttp_session import setup
+from aiohttp_session.cookie_storage import EncryptedCookieStorage
+
 from models import PG_URL, db
 from models.table import create
 from routes import setup_routes
-from aiohttp_session.cookie_storage import EncryptedCookieStorage
 
 BASE_DIR = pathlib.Path(__file__).parent.parent
 

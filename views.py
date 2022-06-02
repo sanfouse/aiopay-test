@@ -1,8 +1,9 @@
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
-from utils.utils import AliItem
+
 from models.table import Advert, User
+from utils.utils import AliItem
 
 
 @aiohttp_jinja2.template('home.html')

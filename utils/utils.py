@@ -1,5 +1,5 @@
-from bs4 import BeautifulSoup
 import requests
+from bs4 import BeautifulSoup
 
 
 class AliItem:
@@ -21,7 +21,7 @@ class AliItem:
             result: str = self.soup.find('div', class_="Product_Price__container__1uqb8 product-price").text
             return int(result.split(',')[0].replace(u'\xa0', u''))
         except:
-            return '123'
+            return 123
 
     def get_delivery_status(self):
         try:
