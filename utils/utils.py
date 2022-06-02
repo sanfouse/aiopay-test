@@ -24,7 +24,7 @@ class AliItem:
         except:
             return 123
 
-    def get_delivery_status(self):
+    def get_(self):
         try:
             pass
         except:

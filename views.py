@@ -24,8 +24,9 @@ async def home(request):
 @aiohttp_jinja2.template('advert.html')
 async def item(request):
     data = str(request.url.relative()).split('/')[1]
+    hr_data = await Advert.query.gino.all()
     founding_advert = await Advert.query.where(Advert.id == int(data)).gino.first()
-    return {'item': founding_advert, 'item_title': founding_advert.title[:15] + '...'} 
+    return {'item': founding_advert, 'item_title': founding_advert.title[:15] + '...', 'data': hr_data} 
 
 
 @aiohttp_jinja2.template('home.html')
