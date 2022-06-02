@@ -1,7 +1,7 @@
 import aiohttp_jinja2
 from aiohttp import web
 from aiohttp_session import get_session
-from utils.utils import GetAliItem
+from utils.utils import AliItem
 from models.table import Advert, User
 
 
@@ -90,7 +90,7 @@ async def edit_item(request):
                 price=data['price'], partner_link=data['link'],
                 category_name=data['category'],
                 category_code=str(data['category']).lower().replace(' ', '_'),
-                image_link=GetAliItem(str(data['link'])).get_image()).apply()
+                image_link=AliItem(str(data['link'])).get_image()).apply()
             raise web.HTTPFound('/admin/')
         else:
             raise web.HTTPFound('/admin/login')
@@ -118,11 +118,11 @@ async def add_item_check(request):
             data = await request.post()
             await Advert.create(title=data['title'],
                 description=data['description'],
-                price=data['price'], 
+                price=AliItem(data['link']).get_price(), 
                 partner_link=data['link'],
                 category_name=data['category'],
                 category_code=str(data['category']).lower().replace(' ', '_'),
-                image_link=GetAliItem(str(data['link'])).get_image())
+                image_link=AliItem(str(data['link'])).get_image())
 
             raise web.HTTPFound('/admin/')
         else:

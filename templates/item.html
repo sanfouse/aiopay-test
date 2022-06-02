@@ -74,11 +74,13 @@
             <span class="input-group-text" id="basic-addon3">https://ali.ski/DfQzs</span>
             <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" value="{{ item.partner_link }}" name="link">
             </div>
+          {% if message == 'Редактирование товара' %}
         <div class="input-group mb-3">
             <span class="input-group-text">₽</span>
             <input type="text" class="form-control" aria-label="Amount (to the nearest dollar)" value="{{ item.price }}" name="price">
             <span class="input-group-text">.00</span>
           </div>
+          {% endif %}
           <div class="col-12">
             <div class="form-check">
               <input class="form-check-input" type="checkbox" value="" id="invalidCheck2" required>
