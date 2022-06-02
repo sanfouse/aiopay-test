@@ -5,8 +5,7 @@ import requests
 class AliItem:
     """Parse AliExpress Item"""
     def __init__(self, url) -> None:
-        self.url = url
-        self.header = {'user-agent': 'hii', 'network_info':'RU_YAROSLAVL_12389'}
+        self.header = {'user-agent': 'hii'}
         self.soup = BeautifulSoup(requests.get(
             url=url,
             headers=self.header).text, 'lxml')
