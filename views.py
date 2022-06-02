@@ -21,9 +21,11 @@ async def home(request):
         return {'data': data[::-1], 'category_data': [x for t in category_data for x in t]}
 
 
-@aiohttp_jinja2.template('index.html')
+@aiohttp_jinja2.template('advert.html')
 async def item(request):
-    pass
+    data = str(request.url.relative()).split('/')[1]
+    founding_advert = await Advert.query.where(Advert.id == int(data)).gino.first()
+    return {'item': founding_advert, 'item_title': founding_advert.title[:15] + '...'} 
 
 
 @aiohttp_jinja2.template('home.html')
