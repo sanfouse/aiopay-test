@@ -1,4 +1,3 @@
-import fake_useragent
 import requests
 from bs4 import BeautifulSoup
 
@@ -6,7 +5,7 @@ from bs4 import BeautifulSoup
 class AliItem:
     """Parse AliExpress Item"""
     def __init__(self, url) -> None:
-        self.header = {'user-agent': fake_useragent.UserAgent().random}
+        self.header = {'user-agent': 'asdsdadsa'}
         self.soup = BeautifulSoup(requests.get(
             url=url,
             headers=self.header).text, 'lxml')
