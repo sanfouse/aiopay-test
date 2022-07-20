@@ -3,27 +3,35 @@ from aiohttp import web
 from aiohttp_session import get_session
 
 from models.table import Advert, User
-from utils.utils import AliItem
+from utils.utils import AliItem, check_url_status
 
 
 @aiohttp_jinja2.template('index.html')
 async def home(request):
     data = await Advert.query.gino.all()
     category_data = await Advert.select('category_name').gino.all()
+
+    search = check_url_status(request)[0]
+    category = check_url_status(request)[1]
+
     try:
         session = await get_session(request)
+        if search is not None:
+            data = await Advert.query.where(Advert.title.startswith(search)).gino.all()
+        if category is not None:
+            data =  await Advert.query.where(Advert.category_name == category).gino.all()
         return {
             'data': data[::-1],
-            'category_data': [x for t in category_data for x in t],
+            'category_data': set([x for t in category_data for x in t]),
             'auth': session['auth']
          }
     except:
-        return {'data': data[::-1], 'category_data': [x for t in category_data for x in t]}
+        return {'data': data[::-1], 'category_data': set([x for t in category_data for x in t])}
 
 
 @aiohttp_jinja2.template('advert.html')
 async def item(request):
-    data = str(request.url.relative()).split('/')[1]
+    data = str(request.url.relative()).split('/')[2]
     hr_data = await Advert.query.gino.all()
     founding_advert = await Advert.query.where(Advert.id == int(data)).gino.first()
     return {'item': founding_advert, 'item_title': founding_advert.title[:15] + '...', 'data': hr_data[:3]} 
@@ -32,10 +40,10 @@ async def item(request):
 @aiohttp_jinja2.template('home.html')
 async def home_admin(request):
     session = await get_session(request)
+    search = check_url_status(request)[0]
     try:
-        if session['auth']:
-            if str(request.url.relative()).startswith('/admin/?search='):
-                search: str =  request.rel_url.query['search']
+        if session['auth']:         
+            if search is not None:
                 data = await Advert.query.where(Advert.title.startswith(str(search))).gino.all()
                 return {'data': data[::-1]}
             data = await Advert.query.gino.all()

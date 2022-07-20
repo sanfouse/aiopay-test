@@ -1,11 +1,10 @@
 from . import db
-from sqlalchemy import BigInteger
 
 class Advert(db.Model):
 
   __tablename__ = 'adverts'
 
-  id = db.Column(db.BigInteger(), primary_key=True)
+  id = db.Column(db.Integer(), primary_key=True)
   category_code = db.Column(db.String(20))
   category_name = db.Column(db.String(50))
 

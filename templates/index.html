@@ -27,12 +27,12 @@
               <h4 class="text-white">О проекте</h4>
               <p class="text-muted">AdminPanel | Monitoring system </p>
             </div>
-            <div class="col-sm-4 offset-md-1 py-4">
+            <!-- <div class="col-sm-4 offset-md-1 py-4">
               <h4 class="text-white">123</h4>
               <ul class="list-unstyled">
                 <form method="post" action="/admin/login"><li><button class="btn btn-danger" type="submit">Выход</button></li></form>
               </ul>
-            </div>
+            </div> -->
           </div>
         </div>
       </div>
@@ -55,14 +55,15 @@
       <div class="position-sticky pt-3">
         <ul class="nav flex-column">
           <li class="nav-item">
-            <form class="d-flex" method='get' action="/admin/">
+            <form class="d-flex" method='get' action="/">
               <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" name="search">
               <button class="btn btn-outline-success" type="submit">Search</button>
             </form>
             <br>
+            <form method="get" action="/">  
           </li>
           <li class="nav-item">
-            <select class="form-select" aria-label="Default select example">
+            <select class="form-select" aria-label="Default select example" name="category">
               {% for category in category_data %}
               <option value="{{ category }}">{{category}}</option>
               {% endfor %}
@@ -85,11 +86,12 @@
           </li>
           <li class="nav-item">
             <div class="d-grid gap-2 col-6 mx-auto">
-              <a class="btn btn-outline-success" type="submit" type="button">Применить</a>
+              <input class="btn btn-outline-success" type="submit" type="button" value="Применить"></input>
             </div>
           </li>
         </ul>
       </div>
+    </form>
     </nav>
     <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
       <div class="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pt-3 pb-2 mb-3 border-bottom">  
@@ -99,7 +101,7 @@
         {% for item in data %}
         <div class="col">
           <div class="card shadow-sm">
-            <a href="/{{ item.id }}"><img src="{{ item.image_link }}" class="img-fluid rounded-start"></a>
+            <a href="/item/{{ item.id }}"><img src="{{ item.image_link }}" class="img-fluid rounded-start"></a>
             <div class="card-body">
               <p class="card-text">{{ item.description_code }}</p>
               <div class="d-flex justify-content-between align-items-center">

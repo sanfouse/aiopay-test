@@ -18,7 +18,7 @@ class AliItem:
 
     def get_price(self):
         try:
-            result: str = self.soup.find('div', class_="Product_Price__container__1uqb8 product-price").text
+            result: str = self.soup.find('div', class_="ali-kit_Base__base__104pa1 ali-kit_Base__default__104pa1 ali-kit_Base__strong__104pa1 price ali-kit_Price__size-xl__12ybyf Product_Price__current__1uqb8 product-price-current").text
             return int(result.split(',')[0].replace(u'\xa0', u''))
         except:
             return 123
@@ -29,3 +29,15 @@ class AliItem:
         except:
             pass
 
+def check_url_status(request):
+    try:
+        search = request.rel_url.query['search']
+    except:
+        search = None
+
+    try:
+        category = request.rel_url.query['category']
+    except:
+        category = None
+    
+    return [search, category]
